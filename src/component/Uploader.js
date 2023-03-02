@@ -3,29 +3,30 @@ import './uploader.css';
 import { MdCloudUpload, MdDelete } from 'react-icons/md';
 import { AiFillFileImage } from 'react-icons/ai';
 import ImageUploader from './ImageUpload';
+
 function Uploader() {
 const [images, setImages] = useState([]);
 const [fileNames, setFileNames] = useState([]);
 
-const handleFileUpload =  (e) => {
+const handleFileUpload = async (e) => {
 const newImages = [...images];
 const newFileNames = [...fileNames];
 
 const files = e.target.files;
-for (let i = 0; i<files.length; i++) {
+for (let i = 0; i < files.length; i++) {
   const file = files[i];
   if (file.type === 'image/png') {
-    const base64 = encodeFileInBase64(file);
+    const base64 = await encodeFileInBase64(file); // Wait for the promise to resolve
+    const base64WithoutPadding = base64.replace(/=*$/, ''); // Remove the padding characters
     newImages.push({
       path: `images/${i+1}.png`,
-      content: base64
+      content: base64WithoutPadding // Add the modified base64 string
     });
     newFileNames.push(file.name);
   }
 }
-
-    setImages(newImages);
-    setFileNames(newFileNames);
+setImages(newImages);
+setFileNames(newFileNames);
 };
 
     const encodeFileInBase64 = (file) => {
@@ -46,13 +47,16 @@ for (let i = 0; i<files.length; i++) {
     setFileNames(newFileNames);
     };
 
-    const handleConsoleLog = () => {
-    console.log(images);
-    // const file= ImageUploader(images);
-    // console.log(file);
+    const handleConsoleLog = async() => {
+      console.log(images);
+      // console.log( images[2].content);
+      const imagesData = images.map(image => ({
+        path: image.path,
+        content: image.content
+      }));
+      const uploadedImages = await ImageUploader(imagesData);
+      console.log(uploadedImages);
     };
-
-
 return (
 <main>
 <form onClick={() => document.querySelector('.input-field').click()}>
@@ -77,9 +81,8 @@ images.map((image, index) => (
 </span>
 </section>
 ))}
-<button onClick={handleConsoleLog}>Console Log Images</button>
+<button onClick={handleConsoleLog}>Upload To IPFS</button>
 </main>
 );
 }
-
 export default Uploader;
