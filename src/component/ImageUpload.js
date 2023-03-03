@@ -7,7 +7,7 @@ async function ImageUploader(ipfsArray) {
       ipfsArray,
       {
         headers: {
-          'X-API-KEY': 'api',
+          'X-API-KEY': '2P40Qm2Xjcvf71Uizp9vOxvZwiGnPxoYR8gNMiHxusSfAQ10PA0HaVwJKgX2VxBW',
           'Content-Type': 'application/json',
           accept: 'application/json',
         },

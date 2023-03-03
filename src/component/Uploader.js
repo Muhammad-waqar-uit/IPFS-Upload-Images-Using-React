@@ -3,11 +3,13 @@ import './uploader.css';
 import { MdCloudUpload, MdDelete } from 'react-icons/md';
 import { AiFillFileImage } from 'react-icons/ai';
 import ImageUploader from './ImageUpload';
-
+import ParseExcell from '../ExcellComponent/ParseExcellData';
+import metaData from '../MetaData/Metadata';
 function Uploader() {
+
+const [excelData, setExcelData] = useState([]);
 const [images, setImages] = useState([]);
 const [fileNames, setFileNames] = useState([]);
-
 const handleFileUpload = async (e) => {
 const newImages = [...images];
 const newFileNames = [...fileNames];
@@ -46,16 +48,30 @@ setFileNames(newFileNames);
     newFileNames.splice(index, 1);
     setFileNames(newFileNames);
     };
-
-    const handleConsoleLog = async() => {
-      console.log(images);
-      // console.log( images[2].content);
+    // const handleConsoleLog = async () => {
+    //   console.log(images);
+    //   const imagesData = images.map(image => ({
+    //     path: image.path,
+    //     content: image.content
+    //   }));
+    //   // const uploadedImages = await ImageUploader(imagesData);
+    //   const Excell=ParseExcell();
+    //   // const metadata = await metaData(excell, uploadedImages);
+    //   // console.log(uploadedImages);
+    //   // console.log(metadata);
+    //   // console.log(excell);
+    // };
+    const handleConsoleLog = async () => {
+      console.log(excelData);
       const imagesData = images.map(image => ({
         path: image.path,
         content: image.content
       }));
       const uploadedImages = await ImageUploader(imagesData);
+      const metadata = await metaData(excelData, uploadedImages);
       console.log(uploadedImages);
+      console.log(metadata);
+      console.log(excelData);
     };
 return (
 <main>
@@ -81,6 +97,7 @@ images.map((image, index) => (
 </span>
 </section>
 ))}
+<ParseExcell setExcelData={setExcelData} />
 <button onClick={handleConsoleLog}>Upload To IPFS</button>
 </main>
 );
